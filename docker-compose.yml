@@ -1,0 +1,22 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: your-user
+      POSTGRES_PASSWORD: your-password
+      POSTGRES_DB: your-database
+    ports:
+      - "5432:5432"
+  app:
+    build: .
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: your-user
+      DB_PASS: your-password
+      DB_NAME: your-database
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
