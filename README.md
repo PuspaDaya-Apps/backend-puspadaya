@@ -1,85 +1,113 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+API Autentikasi dengan NestJS
+Ini adalah API autentikasi sederhana yang dibangun menggunakan NestJS, TypeORM, dan PostgreSQL, yang menyediakan endpoint untuk registrasi pengguna, login, dan validasi pengguna. Proyek ini telah dikontainerisasi menggunakan Docker untuk mempermudah pengaturan.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Fitur
+Registrasi pengguna dengan enkripsi kata sandi
+Login pengguna dengan validasi email dan kata sandi
+Validasi pengguna dengan pembandingan kata sandi terenkripsi
+Integrasi database menggunakan PostgreSQL dan TypeORM
+Lingkungan yang dikontainerisasi menggunakan Docker
+Prasyarat
+Pastikan Anda sudah menginstal perangkat lunak berikut di mesin Anda:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Node.js
+Docker
+Docker Compose
+NestJS CLI
+Pengaturan Proyek
+1. Clone repositori
+bash
+Copy code
+git clone <repository-url>
+cd <project-directory>
+2. Buat file lingkungan (environment)
+Buat file .env di root direktori proyek dan tambahkan variabel-variabel lingkungan berikut:
 
-## Description
+bash
+Copy code
+# Pengaturan database PostgreSQL
+DB_HOST=alamat_host_db
+DB_PORT=5432
+DB_USER=nama_pengguna_db
+DB_PASS=kata_sandi_db
+DB_NAME=nama_database
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Pengaturan lainnya
+JWT_SECRET=jwt_secret_anda
+PORT=3000
+Gantilah alamat_host_db, nama_pengguna_db, kata_sandi_db, dan nama_database sesuai dengan konfigurasi PostgreSQL yang Anda miliki.
 
-## Project setup
+3. Jalankan Docker
+Jalankan kontainer Docker dengan perintah berikut:
 
-```bash
-$ npm install
-```
+bash
+Copy code
+docker-compose up --build
+Ini akan menjalankan API dan menghubungkannya dengan kontainer PostgreSQL.
 
-## Compile and run the project
+4. Jalankan Migrasi
+Untuk memastikan skema database Anda sudah sesuai, jalankan migrasi menggunakan perintah TypeORM CLI (atau jika Anda menggunakan mode synchronize, tabel akan dibuat secara otomatis):
 
-```bash
-# development
-$ npm run start
+bash
+Copy code
+docker exec -it <nama_kontainer> npm run typeorm migration:run
+5. Endpoint API
+Berikut adalah endpoint API yang tersedia:
 
-# watch mode
-$ npm run start:dev
+Registrasi pengguna baru
+URL: /auth/register
+Metode: POST
+Payload:
+json
+Copy code
+{
+  "email": "user@example.com",
+  "password": "your_password"
+}
+Login Pengguna
+URL: /auth/login
+Metode: POST
+Payload:
+json
+Copy code
+{
+  "email": "user@example.com",
+  "password": "your_password"
+}
+Validasi Pengguna
+Fitur ini digunakan secara internal untuk keperluan autentikasi dan tidak diekspos sebagai endpoint API publik.
+6. Menjalankan Tes
+Untuk menjalankan tes unit, gunakan perintah berikut:
 
-# production mode
-$ npm run start:prod
-```
+bash
+Copy code
+npm run test
+Untuk menjalankan tes end-to-end:
 
-## Run tests
+bash
+Copy code
+npm run test:e2e
+7. Menghentikan Kontainer Docker
+Untuk menghentikan kontainer yang sedang berjalan:
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+bash
+Copy code
+docker-compose down
+Struktur Proyek
+bash
+Copy code
+src/
+│
+├── auth/
+│   ├── auth.controller.ts  # Berisi route autentikasi
+│   ├── auth.service.ts     # Logika bisnis untuk autentikasi
+│   └── auth.module.ts      # Modul autentikasi
+│
+├── entities/
+│   └── user.entity.ts      # Mendefinisikan entitas User
+│
+├── app.module.ts           # Modul utama aplikasi
+├── main.ts                 # Entry point aplikasi
+└── ...
+Lisensi
+Proyek ini dilisensikan di bawah lisensi MIT.
