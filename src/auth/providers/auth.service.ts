@@ -1,31 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Body, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { RegisterUserDto } from '../dtos/register-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   // Metode untuk registrasi
-  async register(userData: any) {
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const newUser = this.userRepository.create({
-      email: userData.email,
-      password: hashedPassword,
-      role: 'user',
-    });
-    await this.userRepository.save(newUser);
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
+    console.log(registerUserDto);
+    // // const newUser = this.usersRepository.create({
+    // //   email: registerUserDto.email,
+    // //   password: hashedPassword,
+    // //   role: 'user',
+    // // });
+    // const newUser = await this.usersRepository.findOneBy({
+    //   id: registerUserDto.id,
+    // });
+    // await this.usersRepository.save();
     return { message: 'User registered successfully' };
   }
 
   // Metode untuk login
   async login(loginData: any) {
-    const user = await this.userRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: { email: loginData.email },
     });
     if (!user || !(await bcrypt.compare(loginData.password, user.password))) {
@@ -36,7 +41,7 @@ export class AuthService {
 
   // Metode untuk validasi user
   async validateUser(email: string, password: string) {
-    const user = await this.userRepository.findOne({
+    const user = await this.usersRepository.findOne({
       where: { email },
     });
     if (!user) {
@@ -49,7 +54,7 @@ export class AuthService {
     }
 
     // Menghapus password sebelum return data user
-    const { password: _, ...result } = user;
-    return result;
+    // const { password: _, ...result } = user;
+    // return result;
   }
 }
