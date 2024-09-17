@@ -21,22 +21,23 @@ export class Role {
 
   @Column({
     type: 'text',
+    nullable: true,
   })
-  description: string;
+  description?: string | null;
 
   @OneToMany(() => User, (user) => user.role)
   users: User[];
 
   @CreateDateColumn({
     type: 'timestamp',
-    default: () => "CURRENT_TIMESTAMP(7) + INTERVAL '7 hour'",
+    default: () => 'CURRENT_TIMESTAMP(7)',
   })
   created_at: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
-    default: () => "CURRENT_TIMESTAMP(7) + INTERVAL '7 hour'",
-    onUpdate: "CURRENT_TIMESTAMP(7) + INTERVAL '7 hour'",
+    default: () => 'CURRENT_TIMESTAMP(7)',
+    onUpdate: 'CURRENT_TIMESTAMP(7)',
   })
   updated_at: Date;
 }
