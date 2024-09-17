@@ -10,6 +10,7 @@ import {
 import { Role } from './role.entity';
 
 @Entity('users')
+// @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -29,7 +30,7 @@ export class User {
   @Column({ length: 15, nullable: true })
   phone_number?: string;
 
-  @ManyToOne(() => Role, (role) => role.users)
+  @ManyToOne(() => Role, (role) => role.users, { nullable: true })
   @JoinColumn({ name: 'role_id' })
   role: Role;
 

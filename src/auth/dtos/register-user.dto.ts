@@ -5,6 +5,7 @@ import {
   Length,
   Matches,
   IsNotEmpty,
+  IsUUID,
 } from 'class-validator';
 
 export class RegisterUserDto {
@@ -40,4 +41,8 @@ export class RegisterUserDto {
     message: 'Nomor telepon harus berisi antara 10 - 15 karakter',
   })
   phone_number?: string | null;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'Role ID harus berupa UUID yang valid' })
+  role_id: string;
 }

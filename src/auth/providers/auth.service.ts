@@ -4,27 +4,35 @@ import { Repository } from 'typeorm';
 import { User } from '../../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from '../dtos/register-user.dto';
+import { RolesService } from 'src/roles/providers/roles.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly rolesService: RolesService,
   ) {}
 
-  // Metode untuk registrasi
   async register(@Body() registerUserDto: RegisterUserDto) {
     const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
-    console.log(registerUserDto);
-    // // const newUser = this.usersRepository.create({
-    // //   email: registerUserDto.email,
-    // //   password: hashedPassword,
-    // //   role: 'user',
-    // // });
-    // const newUser = await this.usersRepository.findOneBy({
-    //   id: registerUserDto.id,
-    // });
-    // await this.usersRepository.save();
+
+    let role = null;
+    if (registerUserDto.role_id) {
+      role = await this.rolesService.findOne(registerUserDto.role_id);
+      if (!role) {
+        throw new Error('Role not found');
+      }
+    }
+
+    const newUser = this.usersRepository.create({
+      ...registerUserDto,
+      password: hashedPassword,
+      role: role, // Role bisa null jika tidak disertakan
+    });
+
+    await this.usersRepository.save(newUser);
+
     return { message: 'User registered successfully' };
   }
 

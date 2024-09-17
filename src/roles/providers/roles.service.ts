@@ -10,11 +10,17 @@ export class RolesService {
     @InjectRepository(Role) private rolesRepository: Repository<Role>,
   ) {}
 
-  public async create(@Body() createRolesDto: CreateRolesDto) {
+  public async create(@Body() createRolesDto: CreateRolesDto): Promise<Role> {
     const newRole = this.rolesRepository.create(createRolesDto);
     await this.rolesRepository.save(newRole);
 
     console.log(newRole);
     return newRole;
+  }
+
+  public async findOne(id: string): Promise<Role> {
+    const role = await this.rolesRepository.findOneBy({ id });
+    console.log(role);
+    return role;
   }
 }

@@ -4,11 +4,14 @@ import { AuthService } from './providers/auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
+import { Role } from 'src/entities/role.entity';
+import { RolesModule } from 'src/roles/roles.module';
 
 @Module({
   exports: [AuthService],
   imports: [
-    TypeOrmModule.forFeature([User]),
+    RolesModule,
+    TypeOrmModule.forFeature([User, Role]),
     JwtModule.register({
       secret: 'your-secret-key', // Taruh ini di .env untuk keamanan lebih baik
       signOptions: { expiresIn: '60s' },
