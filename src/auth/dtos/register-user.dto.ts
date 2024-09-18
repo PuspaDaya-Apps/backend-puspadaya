@@ -5,7 +5,6 @@ import {
   Length,
   Matches,
   IsNotEmpty,
-  IsUUID,
 } from 'class-validator';
 
 export class RegisterUserDto {
@@ -42,7 +41,13 @@ export class RegisterUserDto {
   })
   phone_number?: string | null;
 
+  // @IsOptional()
+  // @IsUUID('4', { message: 'Role ID harus berupa UUID yang valid' })
+  // role: string;
+
   @IsOptional()
-  @IsUUID('4', { message: 'Role ID harus berupa UUID yang valid' })
-  role_id: string;
+  @IsString({
+    message: 'Role harus berupa string',
+  })
+  role: string;
 }
