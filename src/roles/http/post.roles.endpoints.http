@@ -1,7 +1,0 @@
-POST http://localhost:3000/roles
-Content-Type: application/json
-
-{
-  "role_name": "admin",
-  "description": "admin role"
-}
